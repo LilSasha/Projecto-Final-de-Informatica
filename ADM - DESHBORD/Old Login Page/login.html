@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="login.css">
+    <title>Login ADM</title>
+</head>
+<body>
+    <div class="body">
+        <main class="container">
+
+            <form class="form-login" id="loginForm">
+                <h1>Login ADM </h1>
+
+                <div class="input-box">
+                    <input placeholder="Telefone (Usuário)" minlength="9" maxlength="9" type="tel" id="tel" required>
+                    <i class="bx bxs-user"></i>
+                </div>
+
+                <div class="input-box">
+                    <input placeholder="Senha" type="password" minlength="6" id="password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+
+                <div class="lembrar-senha">
+                    <label>
+                        <input type="checkbox" id="remember-me">
+                        Lembrar a senha
+                    </label>
+                    <a href="RecuparaSenha.html">Esqueci a senha</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginButton">Login</button>
+
+                <div class="registrar">
+                    <p>Não tem uma conta?</p>
+                    <a href="registrar.html">Criar uma conta</a>
+                </div>
+            </form>
+        </main>
+    </div>
+    
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+    // ⚠️ ATENÇÃO: Confirme esta URL com o seu Spring Boot
+    const LOGIN_API_URL = 'http://localhost:8080/auth/login'; 
+    const SUCCESS_REDIRECT_URL = 'painel-adm.html'; // Página inicial do Painel ADM
+
+    const loginForm = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        
+        // 1. Coleta das credenciais
+        const tel = document.getElementById('tel').value.trim();
+        const password = document.getElementById('password').value;
+
+        // Validação: Telefone tem 9 dígitos (Username)
+        if (tel.length !== 9 || isNaN(tel)) {
+             alert('Erro: O nome de usuário (Telefone) deve ter 9 dígitos numéricos.');
+             return;
+        }
+
+        // 2. Criação do objeto de autenticação (Body JSON)
+        const authenticationData = {
+            username: tel, // O Telefone é o nosso 'username'
+            password: password
+        };
+        
+        // 3. Atualiza o estado do botão
+        const originalButtonText = loginButton.textContent;
+        loginButton.textContent = 'A entrar...';
+        loginButton.disabled = true;
+
+        try {
+            const response = await fetch(LOGIN_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(authenticationData) 
+            });
+
+            if (response.ok) {
+                // 4. SUCESSO! Captura o Token JWT
+                const data = await response.json(); 
+                
+                // Assumimos que o Spring Boot retorna um JSON como: { "token": "eyJhbGciOiJ..." }
+                const jwtToken = data.token; 
+                
+                if (jwtToken) {
+                    // Armazena o token na Session Storage
+                    sessionStorage.setItem('jwtToken', jwtToken);
+                    
+                    alert('Login bem-sucedido! Acedendo ao Painel ADM.');
+                    // Redireciona para o Painel ADM
+                    window.location.href = SUCCESS_REDIRECT_URL; 
+                } else {
+                    throw new Error("Token de autenticação não recebido.");
+                }
+
+            } else {
+                // 5. ERRO (ex: 401 Unauthorized - Credenciais inválidas)
+                const errorText = await response.text();
+                console.error('Erro de Login:', response.status, errorText);
+                
+                let errorMessage = 'Telefone ou senha incorretos.';
+                if (response.status !== 401) {
+                     errorMessage = 'Erro desconhecido. Verifique o servidor.';
+                }
+                
+                alert(errorMessage);
+            }
+        } catch (error) {
+            console.error('Erro de comunicação (rede):', error);
+            alert('Erro de conexão com o servidor. Verifique se o Spring Boot está ativo.');
+        } finally {
+            // 6. Reverte o estado do botão em caso de falha
+            loginButton.textContent = originalButtonText;
+            loginButton.disabled = false;
+        }
+    });
+});
+
+
+    </script> 
+
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados pessoais</title>
+    <link rel="stylesheet" href="Style-Agendar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon" href="IMG/Icon.png">
+</head>
+
+<body>
+
+    <section id="container">
+
+        <!-- MENU -->
+        <section id="menu">
+
+            <br>
+
+            <ul>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span>Serviço</span></li>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span>Data</span></li>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span>Horário</span></li>
+                <li> <label class="circle">4</label> <span class="actual">Informações</span></li>
+                <li> <label class="circle">5</label> <span>Confirmar</span></li>
+            </ul>
+
+            <div class="link-bottom">
+                <h5>Precisa de ajuda?</h5>
+                <a href="suporte.html">Fale conosco</a>
+            </div>
+        </section>
+
+        <!-- FORMULÁRIO -->
+
+        <section id="formulario">
+
+            <div class="title">
+                <h4>Preencha os campos abaixo</h4>
+            </div>
+
+            <div class="dados-form">
+
+                <div class="input-box">
+                    <div class="colunas">
+                        <div class="input-group">
+                            <input type="text" id="primeiroNome" name="primeiroNome" placeholder="Primeiro nome"
+                                required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" id="ultimoNome" name="ultimoNome" placeholder="Último nome" required>
+                        </div>
+                    </div>
+
+                    <div class="colunas">
+                        <div class="input-group">
+                            <input type="tel" maxlength="9" id="telefone" name="telefone" placeholder="Telefone"
+                                required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="email" id="email" name="email" placeholder="E-mail (Opcional)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-box">
+                        <input type="text" maxlength="14" id="bilhete" name="bilhete" placeholder="Nº do BI (Se aplicável)">
+                    </div>
+
+                    <select name="posto" class="input-box" id="posto" required>
+                        <option value="">SELECIONE UM POSTO</option>
+                        <option value="posto1">POSTO DA RUA M</option>
+                        <option value="posto2">POSTO DA RUA 10</option>
+                        <option value="posto3">POSTO DA RUA 24</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn">
+                <a class="btn-1" onclick="history.back(); return false;">Voltar</a>
+                <a href="confirmar.html" id="btnProximoDados" class="btn-2">Próximo</a>
+            </div>
+
+        </section>
+
+    </section>
+
+
+
+
+    <!-- LOGICA JS -->
+    <!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // 1. Referências aos elementos do formulário
+    const primeiroNome = document.getElementById('primeiroNome');
+    const ultimoNome = document.getElementById('ultimoNome');
+    const telefone = document.getElementById('telefone');
+    const email = document.getElementById('email');
+    const bilhete = document.getElementById('bilhete');
+    const posto = document.getElementById('posto');
+    const btnProximo = document.getElementById('btnProximoDados');
+
+    // Lista de campos obrigatórios
+    const camposObrigatorios = [primeiroNome, ultimoNome, telefone, posto];
+
+    // 2. Desabilitar o botão "Próximo" por defeito
+    btnProximo.style.pointerEvents = 'none';
+    btnProximo.style.opacity = '0.5';
+
+    // 3. Função de Validação
+    const validarFormulario = () => {
+        let formularioValido = true;
+
+        // Verifica se os campos de texto obrigatórios não estão vazios
+        if (primeiroNome.value.trim() === '' || ultimoNome.value.trim() === '') {
+            formularioValido = false;
+        }
+
+        // Verifica se o telefone tem 9 dígitos
+        if (telefone.value.trim().length !== 9) {
+            formularioValido = false;
+        }
+
+        // Verifica se um posto foi selecionado
+        if (posto.value === '') {
+            formularioValido = false;
+        }
+
+        // Retorna o estado da validação
+        return formularioValido;
+    };
+
+    // 4. Adiciona um ouvinte de eventos (listener) a cada campo obrigatório
+    camposObrigatorios.forEach(campo => {
+        // 'keyup' para texto, 'change' para select
+        const evento = (campo.tagName === 'SELECT') ? 'change' : 'keyup';
+        
+        campo.addEventListener(evento, () => {
+            if (validarFormulario()) {
+                // Se o formulário for válido, HABILITA o botão
+                btnProximo.style.pointerEvents = 'auto';
+                btnProximo.style.opacity = '1';
+            } else {
+                // Se for inválido, DESABILITA
+                btnProximo.style.pointerEvents = 'none';
+                btnProximo.style.opacity = '0.5';
+            }
+        });
+    });
+
+    // 5. Ação final ao clicar em "Próximo"
+    btnProximo.addEventListener('click', (event) => {
+        // Impede o link de navegar (href="confirmar.html")
+        event.preventDefault(); 
+
+        // Confirma a validação
+        if (validarFormulario()) {
+            // Guarda todos os dados na sessão
+            sessionStorage.setItem('clienteNome', `${primeiroNome.value} ${ultimoNome.value}`);
+            sessionStorage.setItem('clienteTelefone', telefone.value);
+            sessionStorage.setItem('clienteEmail', email.value);
+            sessionStorage.setItem('clienteBI', bilhete.value);
+            sessionStorage.setItem('clientePosto', posto.options[posto.selectedIndex].text); // Guarda o texto (ex: "POSTO SIAC VIANA")
+            
+            // Agora sim, redireciona para a página de confirmação
+            window.location.href = 'confirmar.html';
+        } else {
+            alert('Por favor, preencha todos os campos obrigatórios corretamente.');
+        }
+    });
+});
+    </script> -->
+
+
+</body>
+
+</html>

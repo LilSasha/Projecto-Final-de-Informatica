@@ -1,0 +1,161 @@
+ <!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="login.css">
+    <title>Registrar</title>
+</head>
+
+<body>
+    <div class="body">
+
+        <div class="logo">
+            <a href="index1.html"><img src="IMG/Icon.png"></a>
+        </div>
+
+        <main class="container">
+
+            <form class="form-register" id="registerForm">
+                <h1>Criar conta</h1>
+
+                <div class="input-box">
+                    <input placeholder="Nome Completo" type="text" id="name" required>
+                    <i class="bx bxs-user"></i>
+                </div>
+                
+                <div class="input-box">
+                    <input placeholder="E-mail" type="email" id="email" required>
+                    <i class="bx bxs-envelope"></i>
+                </div>
+
+                <div class="input-box">
+                    <input placeholder="Telefone" type="tel" minlength="9" maxlength="9" id="tel" required>
+                    <i class="bx bxs-phone"></i>
+                </div>
+                
+                <div class="input-box">
+                    <input placeholder="Senha" minlength="6" type="password" id="password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+
+                <div class="input-box">
+                    <input placeholder="Confirmar senha" minlength="6" type="password" id="confirm-password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+
+                <button type="submit" class="btn-login" id="registerButton">Criar Conta</button>
+
+                <div class="registrar">
+                    <p>Já tem uma conta?</p>
+                    <a href="login.html">Login</a>
+                </div>
+            </form>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. CONFIGURAÇÃO CENTRALIZADA (Fácil de explicar: Manutenibilidade)
+    const API_BASE_URL = 'http://localhost:8080';
+    const REGISTER_ENDPOINT = `${API_BASE_URL}/auth/register`;
+
+    // 2. SELEÇÃO DE ELEMENTOS
+    const registerForm = document.getElementById('registerForm');
+    const registerButton = document.getElementById('registerButton');
+    const telInput = document.getElementById('tel');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+
+    // 3. MÁSCARA DE TELEFONE (Teoria: Sanitização de Dados)
+    // Bloqueia qualquer caractere que não seja número em tempo real
+    telInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // 4. VALIDAÇÃO VISUAL DE SENHAS (Teoria: UX / Feedback Imediato)
+    const validarSenhas = () => {
+        const senha = passwordInput.value;
+        const confirmacao = confirmPasswordInput.value;
+
+        if (confirmacao.length > 0) {
+            if (senha === confirmacao) {
+                confirmPasswordInput.style.border = "2px solid #2ecc71"; // Verde se igual
+            } else {
+                confirmPasswordInput.style.border = "2px solid #e74c3e"; // Vermelho se diferente
+            }
+        } else {
+            confirmPasswordInput.style.border = "none";
+        }
+    };
+
+    passwordInput.addEventListener('input', validarSenhas);
+    confirmPasswordInput.addEventListener('input', validarSenhas);
+
+    // 5. SUBMISSÃO DO FORMULÁRIO (Teoria: Comunicação Assíncrona)
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Coleta de dados com limpeza (trim remove espaços vazios acidentais)
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const tel = telInput.value; 
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        // Validações de segurança antes de chamar a API
+        if (password !== confirmPassword) {
+            alert('Erro: As senhas não são iguais.');
+            return;
+        }
+
+        if (tel.length !== 9) {
+            alert('O telefone deve ter 9 dígitos.');
+            return;
+        }
+
+        // Objeto JSON estruturado para o Spring Boot
+        const registrationData = {
+            username: tel,
+            password: password,
+            nomeCompleto: name,
+            email: email,
+            role: 'CID'
+        };
+
+        // Estado de "Loading" no botão (Evita cliques duplos)
+        const originalText = registerButton.textContent;
+        registerButton.textContent = 'Registrando...';
+        registerButton.disabled = true;
+
+        try {
+            const response = await fetch(REGISTER_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(registrationData)
+            });
+
+            if (response.ok) {
+                alert('Conta criada com sucesso!');
+                window.location.href = 'login.html';
+            } else {
+                // Tenta capturar mensagem de erro específica do backend
+                const errorData = await response.json().catch(() => ({}));
+                alert(errorData.message || 'Erro ao registrar. Este telefone já possui uma conta.');
+            }
+        } catch (error) {
+            console.error('Erro de rede:', error);
+            alert('Erro de Servidor' + API_BASE_URL);
+        } finally {
+            // Restaura o botão independentemente do resultado
+            registerButton.textContent = originalText;
+            registerButton.disabled = false;
+        }
+    });
+});
+</script>
+</body>
+</html>

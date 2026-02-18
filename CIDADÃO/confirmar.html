@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar os Dados </title>
+    <link rel="stylesheet" href="Style-Agendar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon" href="IMG/Icon.png">
+</head>
+
+<body>
+
+    <section id="container">
+        
+        <!-- MENU -->
+        <section id="menu">
+            <br>
+            <ul>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span>Serviço</span></li>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span>Data</span></li>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span>Horário</span></li>
+                <li> <label class="circle circle-check"><i class="fa-solid fa-check"></i></label> <span >Informações</span></li>
+                <li> <label class="circle">5</label> <span class="actual">Confirmar</span></li>
+            </ul>
+
+            <div class="link-bottom">
+                <h5>Precisa de ajuda?</h5>
+                <a href="suporte.html">Fale conosco</a>
+            </div>
+        </section>
+
+        <!-- FORMULÁRIO -->
+
+        <section id="formulario">
+
+            <div class="title">
+                <h4>Detalhes da Agendamento</h4>
+            </div>
+
+            <div class="dados-form">
+
+                <div class="form-selecionados">
+                    <div class="dados-pessoais">
+                        <p class="nome">Nome Completo:</p>
+                        <p class="contacto">Contacto:</p>
+                        <p class="servico">Serviço:</p>
+                        <p class="data-hora">Data:</p>
+                        <p class="data-hora">Hora:</p>
+                        <p class="posto">POSTO:</p>
+                    </div>
+
+                    <div class="dados-input">
+                        <p class="nome" id="resumoNome">João Silva</p>
+                        <p class="contacto" id="resumoContacto">912345678</p>
+                        <p class="servico" id="resumoServico">Emissão do Bilhete de Identidade</p>
+                        <p class="data-hora" id="resumoData">15/08/2024</p>
+                        <p class="data-hora" id="resumoHora">10:30</p>
+                        <p class="posto" id="resumoPosto">POSTO DA RUA 10</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="btn">
+                <a href="agendado.html" class="btn-2">Confirmar</a>
+            </div>
+        </section>
+    </section>
+
+<!-- 
+    <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // 1. Elementos de Resumo no HTML (IDs que adicionamos)
+    const resumoNome = document.getElementById('resumoNome');
+    const resumoContacto = document.getElementById('resumoContacto');
+    const resumoServico = document.getElementById('resumoServico');
+    const resumoDataHora = document.getElementById('resumoDataHora');
+    const resumoPosto = document.getElementById('resumoPosto');
+    const btnConfirmar = document.querySelector('.btn-2'); // O botão de Confirmar
+
+    // 2. Resgatar todos os dados armazenados (Estrutura de objeto CORRIGIDA)
+    const dadosAgendamento = {
+        // Dados do Serviço (chave provável de erro)
+        servico: sessionStorage.getItem('servicoNome'), 
+        servicoId: sessionStorage.getItem('servicoSelecionado'), 
+        
+        // Dados de Data e Hora
+        data: sessionStorage.getItem('dataAgendamento'), 
+        hora: sessionStorage.getItem('horaAgendamento'), 
+        
+        // Dados do Cliente (coletados em dados.html)
+        nome: sessionStorage.getItem('clienteNome'), 
+        telefone: sessionStorage.getItem('clienteTelefone'),
+        email: sessionStorage.getItem('clienteEmail'),
+        bi: sessionStorage.getItem('clienteBI'),
+        posto: sessionStorage.getItem('clientePosto'), 
+    };
+
+    // 3. Validação Crítica: Verifica se os dados essenciais existem
+    // Se faltar um destes, o agendamento é inválido e disparamos o erro.
+    if (dadosAgendamento.nome && dadosAgendamento.data && dadosAgendamento.servico) {
+        
+        // Se os dados estão completos, preenchemos o HTML
+
+        // Formatação da data (ex: 2025-11-20 -> 20/11/2025)
+        let dataFormatada = dadosAgendamento.data.split('-').reverse().join('/');
+        
+        resumoNome.textContent = dadosAgendamento.nome || 'N/D';
+        resumoContacto.textContent = dadosAgendamento.telefone || 'N/D';
+        resumoServico.textContent = dadosAgendamento.servico || 'N/D';
+        resumoDataHora.textContent = `${dataFormatada} às ${dadosAgendamento.hora}` || 'N/D';
+        resumoPosto.textContent = dadosAgendamento.posto || 'N/D';
+        
+    } else {
+        // 🚨 Os dados estão incompletos
+        console.error("Dados críticos ausentes na sessão. Verificar o fluxo de Serviço, Data e Informações.");
+        
+        // Mensagem de erro e desabilita a confirmação
+        const formularioSection = document.getElementById('formulario');
+        if (formularioSection) {
+             formularioSection.innerHTML = `
+                <div class="title">
+                    <p>Detalhes da Agendamento</p>
+                </div>
+                <hr>
+                <h2>🚨 Erro: Dados do agendamento incompletos. Por favor, <a href="index.html">volte ao início</a>.</h2>
+            `;
+        }
+        
+        // Remove o botão de confirmação para evitar cliques
+        const btnDiv = document.querySelector('.btn');
+        if(btnDiv) btnDiv.innerHTML = '<a class="btn-1" onclick="history.back(); return false;">Voltar</a>';
+        
+        // Interrompe a execução do script
+        return; 
+    }
+
+
+    // 4. Ação Final: Botão Confirmar (Simulação de Envio para o Java)
+    btnConfirmar.addEventListener('click', (event) => {
+        event.preventDefault(); // Impedir o link
+
+        // Desabilitar o botão para evitar cliques duplicados
+        const textoOriginal = btnConfirmar.textContent;
+        btnConfirmar.textContent = 'A confirmar...';
+        btnConfirmar.style.pointerEvents = 'none';
+
+        // O código de integração com o Spring Boot seria aqui...
+        
+        // SIMULAÇÃO DE CONFIRMAÇÃO (REMOVER APÓS INTEGRAR O JAVA)
+        setTimeout(() => {
+           console.log("Simulação de sucesso. Dados enviados:", dadosAgendamento);
+           // Sucesso na simulação, avança para a página de sucesso
+           window.location.href = 'agendado.html'; 
+           
+           // Opcional: Limpar toda a sessão após o sucesso
+           // sessionStorage.clear(); 
+        }, 1500); 
+    });
+});
+
+    </script>
+ -->
+
+
+</body>
+
+</html>

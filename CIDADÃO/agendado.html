@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENDAR</title>
+    <link rel="stylesheet" href="Style-Agendar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="icon" href="IMG/Icon.png">
+
+    
+</head>
+
+<body>
+
+    <section id="container">
+
+        <!-- FORMULÁRIO -->
+
+        <section id="formulario">
+           
+            <aside>
+                <div class="icon-check">
+                    <i class="fa fa-check"></i>
+                </div>
+
+                <div class="title">
+                    <p class="p-title">CONCLUÍDO</p>
+                </div>
+
+
+                    <div class="concluido-form">
+
+                        <div class="dados-concluido">
+                            <p class="concluido">Seu agendamento foi realizado com sucesso!</p>
+                        </div>
+
+                        <div class="dados-concluido-info">
+                            <p class="concluido">Caro cidadão, se faça presente no dia agendado e <br> 30  minutos antes do horário marcado.</p>
+
+                        </div>
+                    </div>
+
+                <div class="btn-concluido">
+                    <a href="#" id="btnDownloadPDF" class="btn-1"><i class="fa-solid fa-download"></i> Baixar PDF</a> 
+                    
+                    <a href="Index-Agendar.html" class="btn-2">Novo Agendamento</a>
+
+                    <a href="index1.html" class="btn-1">Voltar ao Inicio</a>
+                </div>
+                
+            </aside>
+
+        </section>
+    </section>
+
+
+    <script>
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // ... (todo o seu código existente para preencher os dados de resumo) ...
+        
+        // Novos elementos para PDF e Botão
+        const content = document.querySelector('.dados-form'); // Assumindo que .dados-form é a área a ser printada
+        const btnConfirmar = document.getElementById('btnConfirmarEGerarPDF'); 
+        
+        // 4. FUNÇÃO DE GERAÇÃO DE PDF
+        const gerarPDF = (dados) => {
+            const nomeCliente = dados.nome.split(' ')[0] || 'Cliente';
+            const nomeArquivo = `Comprovante_Agendamento_${nomeCliente}_${dados.data}.pdf`;
+
+            const options = {
+                margin: 1, 
+                filename: nomeArquivo,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Chamada para converter o conteúdo HTML para PDF
+            return html2pdf().set(options).from(content).outputPdf('datauristring');
+        }
+
+        // 5. Ação final ao clicar em "Confirmar e Baixar PDF"
+        btnConfirmar.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            
+            // 5a. Resgatar os dados (se não estiverem em escopo, traga-os aqui)
+            const dadosAgendamento = {
+                nome: sessionStorage.getItem('clienteNome'), 
+                data: sessionStorage.getItem('dataAgendamento'), 
+                // ... (e as outras chaves necessárias)
+            };
+            
+            // Simulação de envio para o Java (Aqui você faria sua chamada POST)
+            // ...
+
+            // 5b. Gerar o PDF (Isso forçará o download)
+            gerarPDF(dadosAgendamento);
+
+            // 5c. Após a geração do PDF (ou após a resposta de sucesso da API Java):
+            // Redireciona para a página de sucesso
+            setTimeout(() => {
+                window.location.href = 'agendado.html'; 
+            }, 100); 
+            
+        });
+    });
+
+    </script>
+        
+
+
+</body>
+
+</html>

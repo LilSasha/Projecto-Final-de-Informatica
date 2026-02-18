@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yindula - Atender Angola</title>
+    <link rel="icon" href="IMG/Icon.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="Index-style.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <!-- BARRA DE CIMA -->
+    <nav>
+        <a href="index1.html"> <img src="IMG/LOGO YINDULA BRANCA.png" alt=""></a>
+        <div class="navegation">
+            <ul>
+                <i id="menu-close-icon" class="fa-regular fa-circle-xmark"></i>
+                <li><a href="index1.html" class="active link">Iniciar</a></li>
+                <li><a href="suporte.html" class="link">Suporte</a></li>
+                <li><a href="sobre.html" class="link">Sobre</a></li>
+                <li class="actual"><a href="contact.html" class="link active">Contacto</a></li>
+            </ul>
+            <i id="menu-btn-icon" class="fas fa-bars "></i>
+        </div>
+    </nav>
+
+    <!-- PAG INICIAL -->
+    <section id="sobre-home">
+        <h2>Entre em contacto <label> conosco</label></h2>
+    </section>
+
+
+    <!-- CONTACTAR - NOS -->
+    <section id="Cadastro">
+
+        <div class="esquerdo">
+
+            <div class="phone">
+
+                <div class="icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+
+                <div class="text">
+                    <label>(+244) 934 795 245</label>
+                    <span>Ligue para nós</span>
+                </div>
+
+            </div>
+
+            <div class="email">
+                <div class="icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="text">
+                    <label>yindula@center.com</label>
+                    <span>Envie-nos um email</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="direito">
+
+            <form action="#">
+
+                <div class="mensagem">
+
+                    <div class="inputs">
+
+                        <div class="dados">
+                            <input type="text" name="name" id="name" placeholder="Seu nome">
+                            <input type="text" name="email" id="email" placeholder="Seu email">
+                            <input type="text" name="assunto" id="assunto" placeholder="Assunto">
+                        </div>
+
+                        <div class="direito">
+                            <div class="text-area">
+                                <textarea type="text" id="textarea" name="textarea" class="textarea"
+                                placeholder="Mensagem"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="btn">
+                    <input type="submit" value="Enviar" class="button">
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- FOOTER - RODAPE -->
+    <footer>
+
+        <style>
+
+        </style>
+
+        <div class="footer-col">
+            <a href="#"><img src="IMG/LOGO YINDULA BRANCA.png" class="img-BI" width="150px"></a>
+
+        </div>
+
+        <div class="footer-col">
+            <h3>Documentos e Registros</h3>
+
+            <a href="#" class="links">
+                <li>Registro Civil e Nascimento</li>
+            </a>
+            <a href="#" class="links">
+                <li>Certidões e Declarações</li>
+            </a>
+            <a href="#" class="links">
+                <li>Portal da Justiça</li>
+            </a>
+            <a href="#" class="links">
+                <li>SIAC - Atendimento Integrado</li>
+            </a>
+        </div>
+
+        <div class="footer-col">
+            <h3>Apoio e Informações</h3>
+
+
+            <a href="contact.html" class="links">
+                <li>Contactos Úteis</li>
+            </a>
+            <a href="suporte.html" class="links">
+                <li>Suporte ao Cidadão</li>
+            </a>
+        </div>
+
+
+        <div class="copyright">
+            <p>Copyright &copy; 2025 Todos os direitos reservados | Web Site para agender atendimentos </p>
+        </div>
+
+    </footer>
+
+
+     <script>
+        $('#menu-btn-icon').click(function () {
+            $('nav .navegation ul').addClass('active')
+        });
+
+        $('#menu-close-icon').click(function () {
+            $('nav .navegation ul').removeClass('active')
+        });
+    </script>
+</body>
+
+</html>

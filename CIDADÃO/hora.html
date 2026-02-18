@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENDAR | Hora</title>
+    <link rel="stylesheet" href="Style-Agendar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon" href="IMG/Icon.png">
+</head>
+
+<body>
+
+
+    <section id="container">
+
+        <!-- MENU -->
+        <section id="menu">
+            <br>
+            <ul>
+                <li> <label class="circle circle-check"></label> <span>Serviço</span>
+                </li>
+                <li> <label class="circle circle-check "><i class="fa-solid fa-check"></i></label> <span>Data</span></li>
+                <li> <label class="circle">3</label> <span class="actual" >Horário</span></li>
+                <li> <label class="circle">4</label> <span>Informações</span></li>
+                <li> <label class="circle">5</label> <span>Confirmar</span></li>
+            </ul>
+
+            <div class="link-bottom">
+                <h5>Precisa de ajuda?</h5>
+                <a href="suporte.html">Fale conosco</a>
+            </div>
+        </section>
+
+        <!-- FORMULÁRIO -->
+
+        <section id="formulario">
+
+            <div class="title">
+                <h4>Horário</h4>
+            </div>
+
+            <div class="data">
+
+                <section class="data">
+                    <div class="container">
+                        <div class="fila">
+                            <label>
+                                <span>08:00</span>
+                            </label>
+                            <label>
+                                <span>08:30</span>
+                            </label>
+                            <label>
+                                <span>09:00</span>
+                            </label>
+                        </div>
+                        <div class="fila">
+                            <label>
+                                <span>09:30</span>
+                            </label>
+                            <label>
+                                <span>10:00</span>
+                            </label>
+                            <label>
+                                <span>10:30</span>
+                            </label>
+                        </div>
+                        <div class="fila">
+                            <label>
+                                <span>11:00</span>
+                            </label>
+                            <label>
+                                <span>11:30</span>
+                            </label>
+                            <label>
+                                <span>12:00</span>
+                            </label>
+                        </div>
+                        <div class="fila">
+                            <label>
+                                <span>12:30</span>
+                            </label>
+                            <label>
+                                <span>13:00</span>
+                            </label>
+                            <label>
+                                <span>13:30</span>
+                            </label>
+                        </div>
+                        <div class="fila">
+                            <label>
+                                <span>14:00</span>
+                            </label>
+                            <label>
+                                <span>14:30</span>
+                            </label>
+                            <label>
+                                <span>15:00</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+            <div class="btn">
+                <a class="btn-1" onclick="history.back(); return false;">Voltar</a>
+                <a href="dados.html" id="btnProximoData" class="btn-2">Próximo</a>
+            </div>
+        </section>
+    </section>
+
+
+    <!-- LOGICA JS -->
+
+
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Referências aos elementos HTML
+            const dataInput = document.getElementById('data');
+            const horaSelect = document.getElementById('hora');
+            const btnProximo = document.querySelector('#btnProximoData');
+            const servicoID = sessionStorage.getItem('servicoSelecionado');
+
+            // Variável para a data mínima formatada, usada na simulação
+            let dataMinimaFormatada = '';
+
+            if (!btnProximo) {
+                console.error("ERRO: Botão 'Próximo' (id=btnProximoData) não foi encontrado!");
+                return;
+            }
+
+            // 2. Desabilita o botão por defeito e verifica se o serviço está selecionado
+            btnProximo.style.pointerEvents = 'none';
+            btnProximo.style.opacity = '0.5';
+
+            if (!servicoID) {
+                alert("Nenhum serviço selecionado. Voltando.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // 3. LÓGICA DE RESTRIÇÃO DE DATA (AJUSTADA: Mínimo 20 dias, Sem Máximo)
+            const formatarData = (data) => {
+                const d = String(data.getDate()).padStart(2, '0');
+                const m = String(data.getMonth() + 1).padStart(2, '0');
+                const a = data.getFullYear();
+                return `${a}-${m}-${d}`;
+            };
+
+            const hoje = new Date();
+            const dataMinimaPermitida = new Date();
+
+            // --- ALTERAÇÃO AQUI: Mudança para 20 dias ---
+            dataMinimaPermitida.setDate(hoje.getDate() + 20);
+            dataMinimaFormatada = formatarData(dataMinimaPermitida);
+
+            // Aplica apenas o 'min' (bloqueia o passado e os próximos 20 dias)
+            dataInput.setAttribute('min', dataMinimaFormatada);
+
+            // Removemos o 'max' para não haver limite futuro
+            dataInput.removeAttribute('max');
+
+            // 4. Lógica de mudança de Data
+            dataInput.addEventListener('change', () => {
+                const dataEscolhida = dataInput.value;
+
+                // Validação extra caso o usuário digite manualmente uma data inválida
+                if (dataEscolhida < dataMinimaFormatada) {
+                    alert("A data deve ser de pelo menos 20 dias a partir de hoje.");
+                    dataInput.value = "";
+                    return;
+                }
+
+                btnProximo.style.pointerEvents = 'none';
+                btnProximo.style.opacity = '0.5';
+
+                if (dataEscolhida) {
+                    horaSelect.innerHTML = '<option value="">Buscando horários...</option>';
+                    const horariosDisponiveis = simularDisponibilidade(servicoID, dataEscolhida);
+                    preencherHorarios(horariosDisponiveis);
+                } else {
+                    horaSelect.innerHTML = '<option value="">Selecione horário</option>';
+                }
+            });
+
+            // 5. LÓGICA DE HABILITAÇÃO DO BOTÃO
+            horaSelect.addEventListener('change', () => {
+                if (horaSelect.value) {
+                    sessionStorage.setItem('dataAgendamento', dataInput.value);
+                    sessionStorage.setItem('horaAgendamento', horaSelect.value);
+
+                    btnProximo.style.pointerEvents = 'auto';
+                    btnProximo.style.opacity = '1';
+                } else {
+                    btnProximo.style.pointerEvents = 'none';
+                    btnProximo.style.opacity = '0.5';
+                }
+            });
+
+            // FUNÇÕES AUXILIARES (Permanecem iguais)
+
+            function simularDisponibilidade(servico, data) {
+                const horariosPossiveis = gerarIntervalosDeTempo(8, 15, 30);
+                let horariosOcupados = [];
+                if (data === dataMinimaFormatada) {
+                    horariosOcupados = ["08:00", "08:30", "09:00", "15:00"];
+                }
+                const horariosDisponiveis = horariosPossiveis.filter(horario =>
+                    !horariosOcupados.includes(horario)
+                );
+                return horariosDisponiveis;
+            }
+
+            function gerarIntervalosDeTempo(inicioHora, fimHora, intervaloMinutos) {
+                const horarios = [];
+                let tempo = inicioHora * 60;
+                while (tempo < fimHora * 60) {
+                    const hora = Math.floor(tempo / 60);
+                    const minuto = tempo % 60;
+                    const horaFormatada = String(hora).padStart(2, '0');
+                    const minutoFormatado = String(minuto).padStart(2, '0');
+                    horarios.push(`${horaFormatada}:${minutoFormatado}`);
+                    tempo += intervaloMinutos;
+                }
+                return horarios;
+            }
+
+            function preencherHorarios(horarios) {
+                horaSelect.innerHTML = '<option value="">Selecione horário</option>';
+                if (horarios.length === 0) {
+                    horaSelect.innerHTML = '<option value="" disabled>Nenhum horário disponível</option>';
+                } else {
+                    horarios.forEach(horario => {
+                        const option = document.createElement('option');
+                        option.value = horario;
+                        option.textContent = horario;
+                        horaSelect.appendChild(option);
+                    });
+                }
+            }
+        });
+
+    </script> -->
+
+
+</body>
+
+</html>

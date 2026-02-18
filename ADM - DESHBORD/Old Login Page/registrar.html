@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="login.css">
+    <title>Registrar</title>
+</head>
+
+<body>
+    <div class="body">
+        <main class="container">
+
+            <form class="form-register" id="registerForm">
+                <h1>Criar conta ADM</h1>
+
+                <div class="input-box">
+                    <input placeholder="Nome Completo" type="text" id="name" required>
+                    <i class="bx bxs-user"></i>
+                </div>
+                
+                <div class="input-box">
+                    <input placeholder="E-mail" type="email" id="email" required>
+                    <i class="bx bxs-envelope"></i>
+                </div>
+
+                <div class="input-box">
+                    <input placeholder="Telefone" type="tel" minlength="9" maxlength="9" id="tel" required>
+                    <i class="bx bxs-phone"></i>
+                </div>
+                
+                <div class="input-box">
+                    <input placeholder="Senha" minlength="6" type="password" id="password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+
+                <div class="input-box">
+                    <input placeholder="Confirmar senha" minlength="6" type="password" id="confirm-password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+
+                <button type="submit" class="btn-login" id="registerButton">Criar Conta</button>
+
+                <div class="registrar">
+                    <p>Já tem uma conta?</p>
+                    <a href="login.html">Login</a>
+                </div>
+            </form>
+        </main>
+    </div>
+    
+
+
+<script>
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ⚠️ ATENÇÃO: Confirme esta URL com o seu Spring Boot
+    const REGISTER_API_URL = 'http://localhost:8080/auth/register'; 
+
+    const registerForm = document.getElementById('registerForm');
+    const registerButton = document.getElementById('registerButton');
+
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        
+        // 1. Coleta dos dados do formulário
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const tel = document.getElementById('tel').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        
+        // --- 2. VALIDAÇÕES CRÍTICAS NO CLIENT-SIDE ---
+        
+        // Validação 1: Senhas coincidem
+        if (password !== confirmPassword) {
+             alert('Confirmação de Senha é diferente da Senha');
+             return; 
+        }
+
+        // Validação 2: Telefone tem 9 dígitos
+        if (tel.length !== 9 || isNaN(tel)) {
+             alert('Verifique o número de telefone');
+             return;
+        }
+
+        // 3. Criação do objeto de dados para envio (Body JSON)
+        // O Telefone será o username para login no Spring Boot
+        const registrationData = {
+            username: tel, 
+            password: password,
+            nomeCompleto: name, 
+            email: email, // Opcional, mas incluído no JSON
+            role: 'ADM' 
+        };
+        
+        // 4. Atualiza o estado do botão
+        const originalButtonText = registerButton.textContent;
+        registerButton.textContent = 'A registrar...';
+        registerButton.disabled = true;
+
+        try {
+            const response = await fetch(REGISTER_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(registrationData) 
+            });
+
+            if (response.ok) {
+                alert('Conta de ADM criada com sucesso! Você será redirecionado para o Login.');
+                // Redireciona para a página de login
+                window.location.href = 'login.html'; 
+            } else {
+                // Erro do servidor (ex: 409 Conflict - Telefone já existe)
+                const errorText = await response.text(); 
+                console.error('Erro de Registro:', response.status, errorText);
+                
+                // Mensagens de erro amigáveis
+                let errorMessage = 'Falha no registro. Verifique os dados.';
+                if (response.status === 409) { // Exemplo de código de conflito para Telefone já em uso
+                    errorMessage = 'Este telefone já está registrado. Tente outro ou faça Login.';
+                }
+                
+                alert(errorMessage);
+            }
+        } catch (error) {
+            console.error('Erro de comunicação (rede):', error);
+            alert('Erro de conexão com o servidor. Verifique se o Spring Boot está ativo.');
+        } finally {
+            // 5. Reverte o estado do botão
+            registerButton.textContent = originalButtonText;
+            registerButton.disabled = false;
+        }
+    });
+});
+
+
+</script>
+
+</body>
+
+</html>

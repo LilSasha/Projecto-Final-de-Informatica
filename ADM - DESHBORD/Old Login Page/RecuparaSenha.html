@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+
+    <link rel="stylesheet" href="login.css">
+    <title>Recuparar Senha</title>
+</head>
+
+<body>
+    <div class="body">
+        <main class="container">
+
+            <form action="#" class="form-login">
+                <h1>Recuparar Senha</h1>
+
+            <div class="input-box">
+                <input placeholder="Seu Telefone" type="tel" id="tel" minlength="9" maxlength="9" required>
+            </div>
+
+                <button type="botton" class="btn-login">Enviar</button>
+
+                <div class="registrar">
+                    <a href="login.html">Fazer login</a> |
+                    <a href="registrar.html" >Criar uma conta</a>
+                </div>
+            </form>
+        </main>
+    </div>
+
+
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+    // ⚠️ ATENÇÃO: Confirme esta URL com o seu Spring Boot (Endpoint de Solicitação)
+    const FORGOT_PASSWORD_API_URL = 'http://localhost:8080/auth/forgot-password'; 
+
+    const form = document.querySelector('.form-login');
+    const telInput = document.getElementById('tel');
+    const sendButton = document.querySelector('.btn-login');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        
+        const tel = telInput.value.trim();
+
+        // 1. Validação: Telefone tem 9 dígitos
+        if (tel.length !== 9 || isNaN(tel)) {
+             alert('Erro: Por favor, insira um número de telefone válido com 9 dígitos.');
+             return;
+        }
+
+        // 2. Criação do objeto de dados (apenas o username/telefone)
+        // O Backend usará isso para localizar o usuário e seu email.
+        const requestData = {
+            username: tel 
+        };
+        
+        // 3. Atualiza o estado do botão
+        const originalButtonText = sendButton.textContent;
+        sendButton.textContent = 'A enviar...';
+        sendButton.disabled = true;
+
+        try {
+            const response = await fetch(FORGOT_PASSWORD_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData) 
+            });
+
+            // O backend deve retornar 200/204 para SUCCESSO,
+            // independentemente de o usuário existir ou não, por razões de segurança.
+            if (response.ok || response.status === 204) {
+                // Mensagem genérica para não revelar se o telefone existe ou não
+                alert('Se o número de telefone estiver registrado, um link de redefinição de senha foi enviado para o seu e-mail associado. Verifique sua caixa de entrada.');
+                
+                // Opcional: Redirecionar para a página de Login
+                setTimeout(() => {
+                    window.location.href = 'login.html'; 
+                }, 1000); 
+
+            } else {
+                // Se houver um erro específico (ex: 500 Interno), o Spring Boot pode retornar JSON.
+                const errorText = await response.text(); 
+                console.error('Erro ao solicitar redefinição:', response.status, errorText);
+                alert('Erro na solicitação. Tente novamente mais tarde ou verifique a conexão com o servidor.');
+            }
+        } catch (error) {
+            console.error('Erro de comunicação (rede):', error);
+            alert('Erro de conexão com o servidor. Tente novamente.');
+        } finally {
+            // 4. Reverte o estado do botão em caso de falha
+            sendButton.textContent = originalButtonText;
+            sendButton.disabled = false;
+        }
+    });
+});
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

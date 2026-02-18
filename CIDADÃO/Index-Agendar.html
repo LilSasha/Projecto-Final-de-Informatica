@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENDAR</title>
+    <link rel="stylesheet" href="Style-Agendar.css">
+    <link rel="icon" href="IMG/Icon.png">
+</head>
+<body>
+
+    <section id="container">
+
+    <!-- MENU -->
+        <section id="menu">
+            <br>
+            <ul>
+                <li> <label class="circle ">1</i></label><span class="actual">Serviço</span>
+                </li>
+                <li> <label class="circle">2</label> <span>Data</span></li>
+                <li> <label class="circle">3</label> <span>Horário</span></li>
+                <li> <label class="circle">4</label> <span>Informações</span></li>
+                <li> <label class="circle">5</label> <span>Confirmar</span></li>
+            </ul>
+
+            <div class="link-bottom">
+                <h5>Precisa de ajuda?</h5>
+                <a href="suporte.html">Fale conosco</a>
+            </div>
+        </section>
+
+    <!-- FORMULÁRIO -->
+
+        <section id="formulario">
+
+            <div class="title">
+                <p><b>Selecione um serviço</b></p>
+            </div>
+
+            <div class="links-servicos">
+                <a href="#"  class="servico-item" data-id="emissao_bi">Emissão do Bilhete de Identidade</a>
+                <a href="#" class="servico-item" data-id="renovacao_bi">Renovação ou Segunda Via do Bilhete de Identidade</a>
+                <a href="#" class="servico-item" data-id="segunda_via_bi">Alteração de dados no Bilhete de Identidade</a>
+            </div>
+
+            <div class="bottom">
+                <div class="btn">
+                    <a href="data.html" id="btnProximo" class="btn-2">Próximo</a>
+                </div>
+            </div>
+
+        </section>
+    </section>
+<!--     
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const servicoItems = document.querySelectorAll('.servico-item');
+        const btnProximo = document.getElementById('btnProximo');
+        let servicoSelecionadoId = null; 
+
+        // 1. Inicializa o botão como desabilitado visualmente
+        btnProximo.style.pointerEvents = 'none';
+        btnProximo.style.opacity = '0.5';
+
+        servicoItems.forEach(item => {
+            item.addEventListener('click', (event) => {
+                event.preventDefault(); 
+
+                // Remove o destaque de todos os itens primeiro
+                servicoItems.forEach(i => i.classList.remove('selecionado'));
+
+                // Adiciona o destaque ao item clicado
+                item.classList.add('selecionado');
+                
+                // --- INÍCIO DA CORREÇÃO CRÍTICA ---
+                
+                // 2. Captura e Guarda o ID e o NOME do serviço
+                servicoSelecionadoId = item.getAttribute('data-id');
+                
+                // Captura o nome legível do texto do link (NOME DO SERVIÇO)
+                const nomeDoServico = item.textContent.trim(); 
+
+                // 3. SALVA AS DUAS CHAVES CRÍTICAS: ID e NOME
+                sessionStorage.setItem('servicoSelecionado', servicoSelecionadoId);
+                sessionStorage.setItem('servicoNome', nomeDoServico); // <<-- A CHAVE QUE FALTAVA!
+                
+                // --- FIM DA CORREÇÃO CRÍTICA ---
+
+                // 4. Habilita o botão 'Próximo'
+                btnProximo.style.pointerEvents = 'auto';
+                btnProximo.style.opacity = '1';
+
+                console.log('Serviço selecionado:', servicoSelecionadoId, 'Nome:', nomeDoServico);
+            });
+        });
+
+        // 4. Ação do botão "Próximo"
+        btnProximo.addEventListener('click', (event) => {
+            if (servicoSelecionadoId) {
+                window.location.href = 'data.html';
+            } else {
+                event.preventDefault(); 
+                alert('Por favor, selecione um serviço antes de prosseguir.');
+            }
+        });
+    });
+
+    </script> -->
+
+</body>
+</html>
