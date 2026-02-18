@@ -1,0 +1,53 @@
+Modelo Conceitual do Banco de Dados Yindula
+
+Entidades:
+
+-Usuario (CIDADAO):
+ID_Usuario (Chave Primaria),
+Nome_Completo,
+Telefone
+Email
+Senha_Hash
+
+-POSTO (Local de atendimento):
+ID_Posto (Chave primaria),
+Nome_Unidade,
+Localização,
+Capacidade_Diaria
+
+
+-Serviço( A regra de negocio):
+ID_Serviço (Chave Primaria),
+Descricao_Servico (Emissao, Renovacao e 2 Via do BI),
+Exigir_BI_Anterior (Booleano: SIM/NAO)
+
+-Agendamento (Coração do SIS):
+ID_Usuario (FK),
+ID_Posto (FK),
+ID_Servico (FK),
+Data_Hora_Marcada,
+Numero_BI_Anterior (Preenchido apenas se o serviço exigir),
+Protocolo_Gerado (O código que vai no PDF),
+Status (Pendente, Concluído, Cancelado)
+
+
+Entidade: ADMINISTRADOR (O Painel):
+ID_Admin (PK),
+Nome,
+Login,
+Senha_Hash,
+ID_Posto_Vinculado (FK).
+
+
+
+Relacionamentos (Lógica de Cardinalidade)
+USUÁRIO (1) --- (N) AGENDAMENTO: Um cidadão pode ter vários agendamentos (ao longo dos anos), mas cada agendamento pertence a um único usuário.
+
+POSTO (1) --- (N) AGENDAMENTO: Um posto recebe muitos agendamentos por dia.
+
+SERVIÇO (1) --- (N) AGENDAMENTO: Um tipo de serviço (ex: Renovação) é aplicado em muitos agendamentos.
+
+POSTO (1) --- (N) ADMINISTRADOR: Um posto pode ter vários atendentes/admins, mas cada admin costuma estar fixo em um posto.
+
+
+
